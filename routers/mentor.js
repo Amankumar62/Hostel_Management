@@ -48,7 +48,9 @@ router.get(
 	passport.authenticate("jwt", { session: false }),
 	(req, res) => {
 		async function getPass() {
-			const pass = await Pass.find().populate("studentDetail");
+			const pass = await Pass.find({ parentApproval: true }).populate(
+				"studentDetail"
+			);
 			const result = pass.filter(
 				pass => `${pass.studentDetail.mentor}` === `${req.user._id}`
 			);

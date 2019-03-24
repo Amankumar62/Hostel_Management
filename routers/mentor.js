@@ -22,6 +22,8 @@ router.post("/register", (req, res) => {
 		const body = {
 			name: req.body.name,
 			employeeId: req.body.employeeId,
+			email: req.body.email,
+			phoneNo: req.body.phoneNo,
 			password: req.body.password,
 			type: req.body.type
 		};
@@ -59,7 +61,7 @@ router.get(
 
 router.get("/pass/yes/:id", (req, res) => {
 	async function updatePass() {
-		const pass = await Pass.findById(req.params.id);
+		const pass = await Pass.findById(req.params.id).populate("studentDetail");
 		pass.mentorApporval = true;
 		pass.mentorReplied = true;
 		const result = await pass.save();
@@ -70,7 +72,7 @@ router.get("/pass/yes/:id", (req, res) => {
 
 router.get("/pass/no/:id", (req, res) => {
 	async function updatePass() {
-		const pass = await Pass.findById(req.params.id);
+		const pass = await Pass.findById(req.params.id).populate("studentDetail");
 		pass.mentorApporval = false;
 		pass.mentorReplied = true;
 		const result = await pass.save();

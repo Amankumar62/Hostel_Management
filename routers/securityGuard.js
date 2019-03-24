@@ -50,7 +50,7 @@ router.get(
 				mentorApporval: true,
 				wardenApproval: true,
 				parentApproval: true
-			});
+			}).populate("studentDetail");
 
 			res.send(pass);
 			// console.log(`${pass[0].studentDetail.parent}` === `${req.user._id}`);

@@ -75,7 +75,7 @@ router.get(
 	passport.authenticate("jwt", { session: false }),
 	(req, res) => {
 		async function updatePass() {
-			const pass = await Pass.findById(req.params.id);
+			const pass = await Pass.findById(req.params.id).populate("studentDetail");
 			pass.parentApproval = true;
 			pass.parentReplied = true;
 			const result = await pass.save();
@@ -90,7 +90,7 @@ router.get(
 	passport.authenticate("jwt", { session: false }),
 	(req, res) => {
 		async function updatePass() {
-			const pass = await Pass.findById(req.params.id);
+			const pass = await Pass.findById(req.params.id).populate("studentDetail");
 			pass.parentApproval = false;
 			pass.parentReplied = true;
 			const result = await pass.save();

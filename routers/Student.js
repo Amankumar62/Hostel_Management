@@ -15,8 +15,10 @@ const Mentor = require("../models/mentor");
 const SecurityGuard = require("../models/securityGuard");
 
 //Profile Routes
-router.get("/pass", (req, res) => {
-	res.json({ msg: "Profile Works" });
+router.get("/pass",passport.authenticate("jwt", { session: false }), (req, res) => {
+	Pass.findOne({ studentDetail: req.user.id }).populate("studentDetail")
+	.then(result=>res.json(result))
+	.catch(err=>console.log(err))
 });
 
 router.post("/register", (req, res) => {
@@ -71,8 +73,8 @@ router.post(
 	(req, res) => {
 		async function createCourse() {
 			const body = {
-				outDate: Date.now(),
-				inDate: Date.now() + 3600000,
+				outDate: req.body.outdate,
+				inDate: req.body.indate,
 				purpose: req.body.purpose,
 				studentDetail: req.user._id
 			};
@@ -88,7 +90,7 @@ router.post(
 router.post("/login", (req, res) => {
 	const email = req.body.registrationNumber;
 	const password = req.body.password;
-	console.log(req.body)
+	console.log(req.body);
 
 	Student.findOne({ registrationNumber: email }).then(user => {
 		if (!user) {
@@ -140,9 +142,11 @@ router.post(
 					user.parent = parent._id;
 					user
 						.save()
-						.then(user => res.json(user))
+						.then(user => res.status(200).json(user))
 						.catch(err => console.log(err));
 				});
+			} else {
+				res.status(400).json({ err: "parent not found" });
 			}
 		});
 	}
@@ -157,7 +161,7 @@ router.post(
 					user.mentor = mentor._id;
 					user
 						.save()
-						.then(user => res.json(user))
+						.then(user => res.json(mentor))
 						.catch(err => console.log(err));
 				});
 			}
@@ -174,7 +178,7 @@ router.post(
 					user.warden = warden._id;
 					user
 						.save()
-						.then(user => res.json(user))
+						.then(user => res.json(warden))
 						.catch(err => console.log(err));
 				});
 			}

@@ -60,7 +60,8 @@ router.get(
 		async function getPass() {
 			const pass = await Pass.find({
 				mentorApporval: true,
-				parentApproval: true
+				parentApproval: true,
+				wardenApproval: false
 			}).populate("studentDetail");
 			res.send(result);
 			// console.log(`${pass[0].studentDetail.parent}` === `${req.user._id}`);

@@ -28,25 +28,31 @@ router.get("/", (req, res) => {
 //Register of Parent
 router.post("/register", (req, res) => {
 	async function createParent() {
-		const body = {
-			name: req.body.name,
-			email: req.body.email,
-			phoneNo: req.body.phoneNo,
-			password: req.body.password,
-			parentId: req.body.parentId,
-			type: req.body.type
-		};
-		const parent = new Parent(body);
+		Parent.findOne({ parentId: req.body.parentId }).then(user => {
+			if (user) {
+				return res.json({ error: " ParentId already present" });
+			} else {
+				const body = {
+					name: req.body.name,
+					email: req.body.email,
+					phoneNo: req.body.phoneNo,
+					password: req.body.password,
+					parentId: req.body.parentId,
+					type: req.body.type
+				};
+				const parent = new Parent(body);
 
-		bcrypt.genSalt(10, (err, salt) => {
-			bcrypt.hash(parent.password, salt, (err, hash) => {
-				if (err) throw err;
-				parent.password = hash;
-				parent
-					.save()
-					.then(user => res.json(user))
-					.catch(err => console.log(err));
-			});
+				bcrypt.genSalt(10, (err, salt) => {
+					bcrypt.hash(parent.password, salt, (err, hash) => {
+						if (err) throw err;
+						parent.password = hash;
+						parent
+							.save()
+							.then(user => res.json(user))
+							.catch(err => console.log(err));
+					});
+				});
+			}
 		});
 	}
 	createParent();

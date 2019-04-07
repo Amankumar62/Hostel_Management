@@ -29,24 +29,30 @@ router.get("/", (req, res) => {
 //Register of
 router.post("/register", (req, res) => {
 	async function createWarden() {
-		const body = {
-			name: req.body.name,
-			employeeId: req.body.employeeId,
-			email: req.body.email,
-			phoneNo: req.body.phoneNo,
-			type: req.body.type,
-			password: req.body.password
-		};
-		const warden = new Warden(body);
-		bcrypt.genSalt(10, (err, salt) => {
-			bcrypt.hash(warden.password, salt, (err, hash) => {
-				if (err) throw err;
-				warden.password = hash;
-				warden
-					.save()
-					.then(user => res.json(user))
-					.catch(err => console.log(err));
-			});
+		Warden.findOne({ employeeId: req.body.employeeId }).then(user => {
+			if (user) {
+				return res.json({ error: "Employee ID already present" });
+			} else {
+				const body = {
+					name: req.body.name,
+					employeeId: req.body.employeeId,
+					email: req.body.email,
+					phoneNo: req.body.phoneNo,
+					type: req.body.type,
+					password: req.body.password
+				};
+				const warden = new Warden(body);
+				bcrypt.genSalt(10, (err, salt) => {
+					bcrypt.hash(warden.password, salt, (err, hash) => {
+						if (err) throw err;
+						warden.password = hash;
+						warden
+							.save()
+							.then(user => res.json(user))
+							.catch(err => console.log(err));
+					});
+				});
+			}
 		});
 	}
 	createWarden();

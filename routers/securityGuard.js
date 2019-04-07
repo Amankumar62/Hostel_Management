@@ -11,7 +11,7 @@ const keys = require("../config/keys");
 const jwt = require("jsonwebtoken");
 const passport = require("passport");
 
-router.get("/test", (req, res) => {
+router.get("/all", (req, res) => {
 	res.json({ msg: "securityGuard test works" });
 });
 //get current user
@@ -19,24 +19,35 @@ router.get("/test", (req, res) => {
 //Register of securityGuard
 router.post("/register", (req, res) => {
 	async function createsecurityGuard() {
-		const body = {
-			name: req.body.name,
-			employeeId: req.body.employeeId,
-			password: req.body.password,
-			type: req.body.type
-		};
-		const securityGuard = new SecurityGuard(body);
-		bcrypt.genSalt(10, (err, salt) => {
-			bcrypt.hash(securityGuard.password, salt, (err, hash) => {
-				if (err) throw err;
-				securityGuard.password = hash;
-				securityGuard
-					.save()
-					.then(user => res.json(user))
-					.catch(err => console.log(err));
-			});
+		SecurityGuard.findOne({ employeeId: req.body.employeeId }).then(user => {
+			if (user) {
+				return res.json({ error: "Employee ID already present" });
+			} else {
+				const body = {
+					name: req.body.name,
+					employeeId: req.body.employeeId,
+					password: req.body.password,
+					type: req.body.type,
+					phoneNo: req.body.phoneNo
+				};
+
+				const securityGuard = new SecurityGuard(body);
+
+				bcrypt.genSalt(10, (err, salt) => {
+					bcrypt.hash(securityGuard.password, salt, (err, hash) => {
+						if (err) throw err;
+						securityGuard.password = hash;
+
+						securityGuard
+							.save()
+							.then(users => res.json(users))
+							.catch(err => console.log(err));
+					});
+				});
+			}
 		});
 	}
+
 	createsecurityGuard();
 });
 

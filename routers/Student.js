@@ -15,48 +15,61 @@ const Mentor = require("../models/mentor");
 const SecurityGuard = require("../models/securityGuard");
 
 //Profile Routes
-router.get("/pass",passport.authenticate("jwt", { session: false }), (req, res) => {
-	Pass.findOne({ studentDetail: req.user.id }).populate("studentDetail")
-	.then(result=>res.json(result))
-	.catch(err=>console.log(err))
-});
+router.get(
+	"/pass",
+	passport.authenticate("jwt", { session: false }),
+	(req, res) => {
+		Pass.findOne({ studentDetail: req.user.id })
+			.populate("studentDetail")
+			.then(result => res.json(result))
+			.catch(err => console.log(err));
+	}
+);
 
 router.post("/register", (req, res) => {
-	console.log(req.body);
 	async function createCourse() {
-		const body = {
-			name: req.body.name,
-			password: req.body.password,
-			registrationNumber: req.body.registrationNumber,
-			rollNumber: req.body.rollNumber,
-			branch: req.body.branch,
-			year: req.body.year,
-			course: req.body.course,
-			group: req.body.group,
-			section: req.body.section,
-			type: req.body.type,
-			contactNumber: req.body.contactNumber
-		};
+		Student.findOne({ registrationNumber: req.body.registrationNumber }).then(
+			user => {
+				if (user) {
+					return res.json({ error: " Registration Number already present" });
+				} else {
+					const body = {
+						name: req.body.name,
+						password: req.body.password,
+						registrationNumber: req.body.registrationNumber,
+						rollNumber: req.body.rollNumber,
+						branch: req.body.branch,
+						year: req.body.year,
+						course: req.body.course,
+						group: req.body.group,
+						section: req.body.section,
+						type: req.body.type,
+						contactNumber: req.body.contactNumber
+					};
 
-		const student = new Student(body);
+					const student = new Student(body);
 
-		bcrypt.genSalt(10, (err, salt) => {
-			bcrypt.hash(student.password, salt, (err, hash) => {
-				if (err) throw err;
-				student.password = hash;
-				student
-					.save()
-					// newUser.password = hash;
-					// 	newUser
-					// 		.save()
-					.then(user => res.json(user))
-					.catch(err => console.log(err));
-			});
-		});
+					bcrypt.genSalt(10, (err, salt) => {
+						bcrypt.hash(student.password, salt, (err, hash) => {
+							if (err) throw err;
+							student.password = hash;
+							student
+								.save()
+								// newUser.password = hash;
+								// 	newUser
+								// 		.save()
+								.then(user => res.json(user))
+								.catch(err => console.log(err));
+						});
+					});
 
-		// const result = await student.save();
-		// res.json(result);
+					// const result = await student.save();
+					// res.json(result);
+				}
+			}
+		);
 	}
+
 	createCourse();
 });
 

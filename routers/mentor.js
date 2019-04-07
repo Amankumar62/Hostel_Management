@@ -19,24 +19,30 @@ router.get("/test", (req, res) => {
 //Register of Mentor
 router.post("/register", (req, res) => {
 	async function createMentor() {
-		const body = {
-			name: req.body.name,
-			employeeId: req.body.employeeId,
-			email: req.body.email,
-			phoneNo: req.body.phoneNo,
-			password: req.body.password,
-			type: req.body.type
-		};
-		const mentor = new Mentor(body);
-		bcrypt.genSalt(10, (err, salt) => {
-			bcrypt.hash(mentor.password, salt, (err, hash) => {
-				if (err) throw err;
-				mentor.password = hash;
-				mentor
-					.save()
-					.then(user => res.json(user))
-					.catch(err => console.log(err));
-			});
+		Mentor.findOne({ employeeId: req.body.employeeId }).then(user => {
+			if (user) {
+				return res.json({ error: "Employee ID already present" });
+			} else {
+				const body = {
+					name: req.body.name,
+					employeeId: req.body.employeeId,
+					email: req.body.email,
+					phoneNo: req.body.phoneNo,
+					password: req.body.password,
+					type: req.body.type
+				};
+				const mentor = new Mentor(body);
+				bcrypt.genSalt(10, (err, salt) => {
+					bcrypt.hash(mentor.password, salt, (err, hash) => {
+						if (err) throw err;
+						mentor.password = hash;
+						mentor
+							.save()
+							.then(user => res.json(user))
+							.catch(err => console.log(err));
+					});
+				});
+			}
 		});
 	}
 	createMentor();

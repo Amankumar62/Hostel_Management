@@ -4,7 +4,7 @@ let ParentSchema = new mongoose.Schema({
 	email: String,
 	phoneNo: Number,
 	type: String,
-	parentId: Number,
+	parentId: String,
 	password: String,
 	childList: [
 		{

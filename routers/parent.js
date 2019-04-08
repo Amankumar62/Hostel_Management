@@ -30,28 +30,42 @@ router.post("/register", (req, res) => {
 	async function createParent() {
 		Parent.findOne({ parentId: req.body.parentId }).then(user => {
 			if (user) {
-				return res.json({ error: " ParentId already present" });
+				return res.json({ error: " PrarentId already present" });
 			} else {
-				const body = {
-					name: req.body.name,
-					email: req.body.email,
-					phoneNo: req.body.phoneNo,
-					password: req.body.password,
-					parentId: req.body.parentId,
-					type: req.body.type
-				};
-				const parent = new Parent(body);
+				Student.findOne({ registrationNumber: req.body.parentId }).then(
+					user => {
+						if (!user) {
+							return res.json({
+								error: " Student Registation Number Not present"
+							});
+						} else {
+							const body = {
+								name: req.body.name,
+								email: req.body.email,
+								phoneNo: req.body.phoneNo,
+								password: req.body.password,
+								parentId: req.body.parentId,
+								type: req.body.type
+							};
+							const parent = new Parent(body);
 
-				bcrypt.genSalt(10, (err, salt) => {
-					bcrypt.hash(parent.password, salt, (err, hash) => {
-						if (err) throw err;
-						parent.password = hash;
-						parent
-							.save()
-							.then(user => res.json(user))
-							.catch(err => console.log(err));
-					});
-				});
+							bcrypt.genSalt(10, (err, salt) => {
+								bcrypt.hash(parent.password, salt, (err, hash) => {
+									if (err) throw err;
+									parent.password = hash;
+									parent
+										.save()
+										.then(users => {
+											user.parent = users._id;
+											user.save().then(re => console.log(re));
+											res.json(users);
+										})
+										.catch(err => console.log(err));
+								});
+							});
+						}
+					}
+				);
 			}
 		});
 	}
@@ -125,6 +139,7 @@ router.post(
 router.post("/login", (req, res) => {
 	const parentId = req.body.parentId;
 	const password = req.body.password;
+	console.log(parentId, password);
 
 	Parent.findOne({ parentId: parentId }).then(user => {
 		if (!user) {

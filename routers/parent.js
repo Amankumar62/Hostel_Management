@@ -139,7 +139,7 @@ router.post(
 router.post("/login", (req, res) => {
 	const parentId = req.body.parentId;
 	const password = req.body.password;
-	console.log(parentId, password);
+	
 
 	Parent.findOne({ parentId: parentId }).then(user => {
 		if (!user) {

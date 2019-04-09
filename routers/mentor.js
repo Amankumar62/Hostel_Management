@@ -58,10 +58,10 @@ router.get(
 				parentApproval: true,
 				mentorApporval: false
 			}).populate("studentDetail");
-			const result = pass.filter(
-				pass => `${pass.studentDetail.mentor}` === `${req.user._id}`
-			);
-			res.send(result);
+			// const result = pass.filter(
+			// 	pass => `${pass.studentDetail.mentor}` === `${req.user._id}`
+			// );
+			res.send(pass);
 			// console.log(`${pass[0].studentDetail.parent}` === `${req.user._id}`);
 		}
 		getPass();

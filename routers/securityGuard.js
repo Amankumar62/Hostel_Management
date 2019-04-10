@@ -60,7 +60,8 @@ router.get(
 			const pass = await Pass.find({
 				mentorApporval: true,
 				wardenApproval: true,
-				parentApproval: true
+				parentApproval: true,
+				gateEntry : false;
 			}).populate("studentDetail");
 
 			res.send(pass);

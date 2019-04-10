@@ -78,7 +78,7 @@ router.get(
 	passport.authenticate("jwt", { session: false }),
 	(req, res) => {
 		async function getPass() {
-			const pass = await Pass.find().populate("studentDetail");
+			const pass = await Pass.find({gateEntry: false}).populate("studentDetail");
 			const result = pass.filter(
 				pass => `${pass.studentDetail.parent}` === `${req.user._id}`
 			);

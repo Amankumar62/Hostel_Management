@@ -6,6 +6,10 @@ let passSchema = new mongoose.Schema({
 	mentorReplied: { type: Boolean, default: false },
 	wardenReplied: { type: Boolean, default: false },
 	parentReplied: { type: Boolean, default: false },
+	gateEntry: { type: Boolean, default: false },
+	gateIn: { type: Boolean, default: false },
+	gateOutTime: Date,
+	gateEntryTime: Date,
 	ParentText: String,
 	wardenText: String,
 	mentorText: String,
@@ -18,4 +22,4 @@ let passSchema = new mongoose.Schema({
 	}
 });
 
-module.exports=Pass = mongoose.model("pass", passSchema);
+module.exports = Pass = mongoose.model("pass", passSchema);

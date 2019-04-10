@@ -61,11 +61,11 @@ router.get(
 				mentorApporval: true,
 				wardenApproval: true,
 				parentApproval: true,
-				gateEntry : false;
+				gateEntry: false
 			}).populate("studentDetail");
 
 			res.send(pass);
-			// console.log(`${pass[0].studentDetail.parent}` === `${req.user._id}`);
+			// console.log(`${pass[0].studentDetail.parent` === `${req.user._id}`);
 		}
 		getPass();
 	}

@@ -106,6 +106,28 @@ router.post("/login", (req, res) => {
 	});
 });
 
+router.get("/pass/out/:id", (req, res) => {
+	async function updatePass() {
+		const pass = await Pass.findById(req.params.id).populate("studentDetail");
+		pass.gateOut = true;
+		pass.gateOutTime = Date.now();
+		const result = await pass.save();
+		res.json(result);
+	}
+	updatePass();
+});
+
+router.get("/pass/in/:id", (req, res) => {
+	async function updatePass() {
+		const pass = await Pass.findById(req.params.id).populate("studentDetail");
+		pass.gateEntry = true;
+		pass.gateEntryTime = Date.now();
+		const result = await pass.save();
+		res.json(result);
+	}
+	updatePass();
+});
+
 router.get(
 	"/current",
 	passport.authenticate("jwt", { session: false }),

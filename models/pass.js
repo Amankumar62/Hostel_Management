@@ -7,7 +7,7 @@ let passSchema = new mongoose.Schema({
 	wardenReplied: { type: Boolean, default: false },
 	parentReplied: { type: Boolean, default: false },
 	gateEntry: { type: Boolean, default: false },
-	gateIn: { type: Boolean, default: false },
+	gateOut: { type: Boolean, default: false },
 	gateOutTime: Date,
 	gateEntryTime: Date,
 	ParentText: String,

@@ -13,6 +13,7 @@ const Warden = require("../models/warden");
 const Parent = require("../models/parents");
 const Mentor = require("../models/mentor");
 const SecurityGuard = require("../models/securityGuard");
+const Attendacnce = require("../models/Attendance");
 
 //Profile Routes
 router.get(
@@ -79,6 +80,20 @@ router.get("/user", (req, res) => {
 	}
 	Get();
 });
+
+router.get(
+	"/pass",
+	passport.authenticate("jwt", { session: false }),
+	(req, res) => {
+		async function Get() {
+			pass
+				.findOne({ studentDetail: req.user._id })
+				.populate("studentDetail")
+				.then(result => res.json(result));
+		}
+		Get();
+	}
+);
 
 router.post(
 	"/pass",
@@ -181,6 +196,54 @@ router.post(
 		});
 	}
 );
+router.post(
+	"/food",
+	passport.authenticate("jwt", { session: false }),
+	(req, res) => {
+		Student.findById(req.user._id).then(user => {
+			if (user) {
+				let d = new Date();
+				let p = d.getHours();
+				if (p < 10) {
+					user.brakefastToken = true;
+				} else if (p > 12 && p < 15) {
+					user.lunchToken = true;
+				} else if (p > 19 && p < 11) {
+					user.dinnerToken = true;
+				}
+				user.save().then(result => res.send(result));
+			}
+		});
+	}
+);
+
+router.post(
+	"/attendance",
+	passport.authenticate("jwt", { session: false }),
+	(req, res) => {
+		async function creatAttendance() {
+			var d = new Date();
+			const body = {
+				studentDetail: req.user._id,
+				checking: {
+					type: "req.body.type"
+				}
+			};
+			const attendacnce = new Attendacnce(body);
+
+			const result = await attendacnce.save();
+			res.json(result);
+		}
+		creatAttendance();
+
+		// Student.findById(req.user._id).then(user => {
+		// 	if (user) {
+
+		// 	}
+		// });
+	}
+);
+
 router.post(
 	"/addWarden",
 	passport.authenticate("jwt", { session: false }),

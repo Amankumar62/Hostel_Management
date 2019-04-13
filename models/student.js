@@ -11,9 +11,7 @@ let studentSchema = new mongoose.Schema({
 	group: String,
 	section: String,
 	contactNumber: Number,
-	brakefastToken:{ type: Boolean, default: false },
-	lunchToken:{ type: Boolean, default: false },
-	dinnerToken:{ type: Boolean, default: false },
+	Token: Date,
 	hostel: {
 		type: mongoose.Schema.Types.ObjectId,
 		ref: "Hostel"

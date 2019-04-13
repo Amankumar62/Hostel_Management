@@ -86,8 +86,7 @@ router.get(
 	passport.authenticate("jwt", { session: false }),
 	(req, res) => {
 		async function Get() {
-			pass
-				.findOne({ studentDetail: req.user._id })
+			Pass.findOne({ studentDetail: req.user._id })
 				.populate("studentDetail")
 				.then(result => res.json(result));
 		}
@@ -202,18 +201,21 @@ router.post(
 	(req, res) => {
 		Student.findById(req.user._id).then(user => {
 			if (user) {
-				let d = new Date();
-				let p = d.getHours();
-				if (p < 10) {
-					user.brakefastToken = true;
-				} else if (p > 12 && p < 15) {
-					user.lunchToken = true;
-				} else if (p > 19 && p < 11) {
-					user.dinnerToken = true;
-				}
+				user.Token = Date.now();
 				user.save().then(result => res.send(result));
 			}
 		});
+	}
+);
+
+router.get(
+	"/food",
+	passport.authenticate("jwt", { session: false }),
+	(req, res) => {
+		async function Get() {
+			Student.findById(req.user._id).then(result => res.json(result));
+		}
+		Get();
 	}
 );
 

@@ -117,7 +117,6 @@ router.post(
 router.post("/login", (req, res) => {
 	const email = req.body.registrationNumber;
 	const password = req.body.password;
-	console.log(req.body);
 
 	Student.findOne({ registrationNumber: email }).then(user => {
 		if (!user) {
@@ -219,6 +218,28 @@ router.get(
 	}
 );
 
+router.get(
+	"/attendance",
+	passport.authenticate("jwt", { session: false }),
+	(req, res) => {
+		async function Get() {
+			Attendance.findOne({
+				date: Date()
+					.toString()
+					.substring(0, 15)
+			}).then(result => {
+				const mm = result.students;
+				result2 = mm.filter(
+					rem => rem.studentDetail.toString() == req.user._id.toString()
+				);
+
+				res.send(result2[0]);
+			});
+		}
+		Get();
+	}
+);
+
 router.post(
 	"/attendance",
 	passport.authenticate("jwt", { session: false }),
@@ -238,9 +259,7 @@ router.post(
 					if (temp) {
 						const bodya = {
 							types: req.body.type,
-							timing: Date()
-								.toString()
-								.substring(0, 15)
+							timing: Date().toString()
 						};
 						temp.checking.push(bodya);
 					} else {

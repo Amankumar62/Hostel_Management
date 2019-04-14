@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 let attendanceSchema = new mongoose.Schema({
-	date: { type: Date, default: Date.now },
+	date: { type: String, default: Date.now },
 	students: [
 		{
 			studentDetail: {
@@ -9,7 +9,7 @@ let attendanceSchema = new mongoose.Schema({
 			},
 			checking: [
 				{
-					type: String,
+					types: String,
 					timing: { type: Date, default: Date.now }
 				}
 			]

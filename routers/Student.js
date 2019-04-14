@@ -13,7 +13,7 @@ const Warden = require("../models/warden");
 const Parent = require("../models/parents");
 const Mentor = require("../models/mentor");
 const SecurityGuard = require("../models/securityGuard");
-const Attendacnce = require("../models/Attendance");
+const Attendance = require("../models/Attendance");
 
 //Profile Routes
 router.get(
@@ -224,25 +224,69 @@ router.post(
 	passport.authenticate("jwt", { session: false }),
 	(req, res) => {
 		async function creatAttendance() {
-			var d = new Date();
-			const body = {
-				studentDetail: req.user._id,
-				checking: {
-					type: "req.body.type"
-				}
-			};
-			const attendacnce = new Attendacnce(body);
+			Attendance.findOne({
+				date: Date()
+					.toString()
+					.substring(0, 15)
+			}).then(attendance => {
+				if (attendance) {
+					const temp = attendance.students.filter(
+						result =>
+							result.studentDetail.toString() === req.user._id.toString()
+					)[0];
 
-			const result = await attendacnce.save();
-			res.json(result);
+					if (temp) {
+						const bodya = {
+							types: req.body.type,
+							timing: Date()
+								.toString()
+								.substring(0, 15)
+						};
+						temp.checking.push(bodya);
+					} else {
+						const checking = [
+							{
+								types: "in",
+								timing: Date()
+									.toString()
+									.substring(0, 15)
+							}
+						];
+
+						const student = {
+							studentDetail: req.user._id,
+							checking
+						};
+						attendance.students.push(student);
+						attendance.save().then(result => res.send(result));
+						return;
+					}
+					attendance.save().then(result => res.send(result));
+				} else {
+					const checking = [
+						{
+							types: req.body.type
+						}
+					];
+					const students = [
+						{
+							studentDetail: req.user._id,
+							checking
+						}
+					];
+					const body = {
+						date: Date()
+							.toString()
+							.substring(0, 15),
+						students
+					};
+					const attendance = new Attendance(body);
+
+					attendance.save().then(result => res.json(result));
+				}
+			});
 		}
 		creatAttendance();
-
-		// Student.findById(req.user._id).then(user => {
-		// 	if (user) {
-
-		// 	}
-		// });
 	}
 );
 

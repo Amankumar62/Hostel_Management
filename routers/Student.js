@@ -265,7 +265,7 @@ router.post(
 					} else {
 						const checking = [
 							{
-								types: "in",
+								types: req.body.type,
 								timing: Date()
 									.toString()
 									.substring(0, 15)

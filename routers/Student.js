@@ -114,6 +114,20 @@ router.post(
 	}
 );
 
+router.delete(
+	"/pass/:id",
+	passport.authenticate("jwt", { session: false }),
+	(req, res) => {
+		console.log(req.params.id);
+		async function createCourse() {
+			const pass = await Pass.deleteOne({ _id: req.params.id });
+
+			res.json(pass);
+		}
+		createCourse();
+	}
+);
+
 router.post("/login", (req, res) => {
 	const email = req.body.registrationNumber;
 	const password = req.body.password;

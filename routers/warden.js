@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const _ = require("lodash");
 
+const Student = require("../models/student");
 const Parent = require("../models/parents");
 const Warden = require("../models/warden");
 const Mentor = require("../models/mentor");
@@ -144,6 +145,17 @@ router.post("/login", (req, res) => {
 		});
 	});
 });
+
+router.get(
+	"/food",
+	passport.authenticate("jwt", { session: false }),
+	(req, res) => {
+		async function Get() {
+			Student.find().then(result=>res.send(result))
+		}
+		Get();
+	}
+);
 
 router.get(
 	"/current",

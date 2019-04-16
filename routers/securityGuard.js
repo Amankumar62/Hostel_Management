@@ -25,7 +25,7 @@ router.post("/register", (req, res) => {
 			} else {
 				const body = {
 					name: req.body.name,
-					employeeId: req.body.employeeId,
+					employeeId: req.body.employeeId.toLowerCase(),
 					password: req.body.password,
 					type: req.body.type,
 					phoneNo: req.body.phoneNo
@@ -72,7 +72,7 @@ router.get(
 );
 
 router.post("/login", (req, res) => {
-	const employeeId = req.body.employeeId;
+	const employeeId = req.body.employeeId.toLowerCase();
 	const password = req.body.password;
 
 	SecurityGuard.findOne({ employeeId: employeeId }).then(user => {

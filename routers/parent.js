@@ -44,7 +44,7 @@ router.post("/register", (req, res) => {
 								email: req.body.email,
 								phoneNo: req.body.phoneNo,
 								password: req.body.password,
-								parentId: req.body.parentId,
+								parentId: req.body.parentId.toLowerCase(),
 								type: req.body.type
 							};
 							const parent = new Parent(body);
@@ -78,7 +78,9 @@ router.get(
 	passport.authenticate("jwt", { session: false }),
 	(req, res) => {
 		async function getPass() {
-			const pass = await Pass.find({gateEntry: false}).populate("studentDetail");
+			const pass = await Pass.find({ gateEntry: false }).populate(
+				"studentDetail"
+			);
 			const result = pass.filter(
 				pass => `${pass.studentDetail.parent}` === `${req.user._id}`
 			);
@@ -137,9 +139,8 @@ router.post(
 );
 
 router.post("/login", (req, res) => {
-	const parentId = req.body.parentId;
+	const parentId = req.body.parentId.toLowerCase();
 	const password = req.body.password;
-	
 
 	Parent.findOne({ parentId: parentId }).then(user => {
 		if (!user) {

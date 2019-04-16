@@ -37,7 +37,7 @@ router.post("/register", (req, res) => {
 					const body = {
 						name: req.body.name,
 						password: req.body.password,
-						registrationNumber: req.body.registrationNumber,
+						registrationNumber: req.body.registrationNumber.toLowerCase(),
 						rollNumber: req.body.rollNumber,
 						branch: req.body.branch,
 						year: req.body.year,
@@ -129,7 +129,7 @@ router.delete(
 );
 
 router.post("/login", (req, res) => {
-	const email = req.body.registrationNumber;
+	const email = req.body.registrationNumber.toLowerCase();
 	const password = req.body.password;
 
 	Student.findOne({ registrationNumber: email }).then(user => {

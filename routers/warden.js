@@ -36,7 +36,7 @@ router.post("/register", (req, res) => {
 			} else {
 				const body = {
 					name: req.body.name,
-					employeeId: req.body.employeeId,
+					employeeId: req.body.employeeId.toLowerCase(),
 					email: req.body.email,
 					phoneNo: req.body.phoneNo,
 					type: req.body.type,
@@ -111,7 +111,7 @@ router.post("/pass/:id", (req, res) => {
 });
 
 router.post("/login", (req, res) => {
-	const employeeId = req.body.employeeId;
+	const employeeId = req.body.employeeId.toLowerCase();
 	const password = req.body.password;
 
 	Warden.findOne({ employeeId: employeeId }).then(user => {
@@ -151,7 +151,7 @@ router.get(
 	passport.authenticate("jwt", { session: false }),
 	(req, res) => {
 		async function Get() {
-			Student.find().then(result=>res.send(result))
+			Student.find().then(result => res.send(result));
 		}
 		Get();
 	}

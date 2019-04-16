@@ -25,7 +25,7 @@ router.post("/register", (req, res) => {
 			} else {
 				const body = {
 					name: req.body.name,
-					employeeId: req.body.employeeId,
+					employeeId: req.body.employeeId.toLowerCase(),
 					email: req.body.email,
 					phoneNo: req.body.phoneNo,
 					password: req.body.password,
@@ -104,7 +104,7 @@ router.get("/pass/:id", (req, res) => {
 });
 
 router.post("/login", (req, res) => {
-	const employeeId = req.body.employeeId;
+	const employeeId = req.body.employeeId.toLowerCase();
 	const password = req.body.password;
 
 	Mentor.findOne({ employeeId: employeeId }).then(user => {
